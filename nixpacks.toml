@@ -1,2 +1,2 @@
 [phases.setup]
-nixpkgs = ["python310"]
+nixpkgs = ["python3.13.0"]

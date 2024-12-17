@@ -1,0 +1,2 @@
+telebot
+yt_dlp

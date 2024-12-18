@@ -6,7 +6,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 
 # Токен бота
-TOKEN = '8022014605:AAF-XMHK40SfJuDYxaq-EnnJhMPIvhiw-Ag'
+TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'
 bot = telebot.TeleBot(TOKEN)
 
 # Папка для хранения файлов

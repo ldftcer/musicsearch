@@ -1,2 +1,2 @@
 [phases.setup]
-nixpkgs = ["python310"]
+nixpkgs = ["ffmpeg", "python310", "gcc"]

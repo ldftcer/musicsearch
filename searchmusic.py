@@ -97,7 +97,7 @@ def handle_callback(call):
             bot.send_message(call.message.chat.id, "✅ **Երգը պատրաստ է! Ուղարկում եմ...**", parse_mode="Markdown")
             try:
                 with open(audio_file, 'rb') as audio:
-                    caption = "🎵 Ներբեռնվել է @ergeripntrtuknerov_bot\n🔗 @ishkachka | @ldftcer"
+                    caption = "🎵 Ներբեռնվել է  @melodyi_bot \n🔗 @ishkachka | @ldftcer"
                     bot.send_audio(
                         call.message.chat.id, 
                         audio, 

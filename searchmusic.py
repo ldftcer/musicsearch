@@ -5,15 +5,12 @@ import yt_dlp
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-# Токен бота
 TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'
 bot = telebot.TeleBot(TOKEN)
 
-# Папка для хранения файлов
 DOWNLOAD_FOLDER = 'downloads'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-# Поиск песен на YouTube
 def search_youtube(query):
     ydl_opts = {'quiet': True, 'noplaylist': True, 'extract_flat': True}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -25,7 +22,6 @@ def search_youtube(query):
             print(f"Ошибка при поиске: {e}")
     return []
 
-# Скачивание аудио из YouTube
 def download_audio(url):
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -46,7 +42,6 @@ def download_audio(url):
         print(f"Ошибка при скачивании: {e}")
     return None
 
-# Команда /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     welcome_text = (
@@ -58,7 +53,6 @@ def send_welcome(message):
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
 
-# Обработка текстовых сообщений
 @bot.message_handler(func=lambda message: True)
 def handle_query(message):
     query = message.text
@@ -73,20 +67,17 @@ def handle_query(message):
         bot.send_message(message.chat.id, "😔 Երգը չգտնվեց։ Փորձիր այլ անվանում։")
         return
 
-    # Создаём кнопки с результатами
     markup = types.InlineKeyboardMarkup()
     for result in results:
-        if 'url' in result or 'id' in result:  # Проверка на наличие ссылки или ID
-            title = re.sub(r'\[.*?\]', '', result.get('title', 'No Title'))  # Удаляем лишние символы из названия
+        if 'url' in result or 'id' in result:  
+            title = re.sub(r'\[.*?\]', '', result.get('title', 'No Title'))  
             video_url = f"https://www.youtube.com/watch?v={result['id']}" if 'id' in result else result['url']
-            # Добавляем эмодзи к заголовкам
             button_text = f"🎧 {title}"
             button = types.InlineKeyboardButton(text=button_text, callback_data=video_url)
             markup.add(button)
 
     bot.send_message(message.chat.id, "💡 Ընտրեք երգը ստորև👇", reply_markup=markup)
 
-# Обработка нажатий на кнопки
 @bot.callback_query_handler(func=lambda call: True)
 def handle_callback(call):
     bot.answer_callback_query(call.id, "⏳ Ներբեռնում եմ... խնդրում եմ սպասիր...")
@@ -108,14 +99,13 @@ def handle_callback(call):
                 bot.send_message(call.message.chat.id, "❌ Չհաջողվեց ուղարկել երգը։")
                 print(f"Ошибка при отправке файла: {e}")
             finally:
-                os.remove(audio_file)  # Удаляем файл после отправки
+                os.remove(audio_file)  
         else:
             bot.send_message(call.message.chat.id, "❌ Չհաջողվեց ներբեռնել երգը։")
 
-    with ThreadPoolExecutor(max_workers=5) as executor:  # Количество потоков для загрузки/отправки
+    with ThreadPoolExecutor(max_workers=5) as executor: 
         executor.submit(download_and_send)
 
-# Запуск бота
 print("\n" + "="*40)
 print("🎶 Բոտ հաջողությամբ գործարկված է! Հիմա սպասում եմ հաղորդագրություններին...")
 print("🔗 Разработано: @ergeripntrtuknerov_bot | @ishkachka | @ldftcer")

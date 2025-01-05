@@ -5,7 +5,7 @@ import yt_dlp
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'
+TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'  # Замените на ваш токен
 bot = telebot.TeleBot(TOKEN)
 
 DOWNLOAD_FOLDER = 'downloads'
@@ -52,6 +52,21 @@ def send_welcome(message):
         "💡 Սեղմիր /help, եթե ունես հարցեր։"
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
+
+@bot.message_handler(commands=['help'])
+def send_help(message):
+    help_text = (
+        "📖 **Ինչպես օգտվել բոտից:**\n\n"
+        "1. Ուղարկեք ինձ երգի կամ արտիստի անունը։\n"
+        "2. Ես ցույց կտամ YouTube-ի 5 լավագույն արդյունքները։\n"
+        "3. Ընտրեք երգը ցանկից։\n"
+        "4. Երգը կվերափոխվի MP3 ձևաչափի և կուղարկվի ձեզ։\n\n"
+        "❗ **Նշում:**\n"
+        "- Ամբողջ պրոցեսը կարող է տևել մի քանի րոպե, կախված ինտերնետի արագությունից։\n"
+        "- Եթե ինչ-որ բան չի աշխատում, փորձեք կրկին։\n\n"
+        "📩 **Հարցերի դեպքում դիմեք:** @ldftcer"
+    )
+    bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
 
 @bot.message_handler(func=lambda message: True)
 def handle_query(message):

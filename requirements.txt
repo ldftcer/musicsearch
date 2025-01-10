@@ -1,2 +1,4 @@
-telebot
-yt_dlp
+pyrogram
+tgcrypto
+yt-dlp
+requests

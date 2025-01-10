@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Переменные Railway
-TOKEN = '7246695508:AAFynFXANrHO-JoQw1Sxdou_ln9M7-NWQIY'
+TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'
 API_ID = '23124608'
 API_HASH = '0a612aa8f1c8f5eaf60eaadb73ab8e27'
 

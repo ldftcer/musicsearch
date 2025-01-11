@@ -5,7 +5,7 @@ import yt_dlp
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-TOKEN = 'YOUR_BOT_TOKEN'  # Փոխարինեք ձեր բոտի նշանաբառով
+TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'  # Փոխարինեք ձեր բոտի նշանաբառով
 OWNER_ID = 123456789  # Փոխարինեք ձեր Telegram ID-ով
 BANNED_USERS_FILE = 'banned_users.txt'
 

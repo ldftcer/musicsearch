@@ -5,8 +5,8 @@ import yt_dlp
 import re
 from concurrent.futures import ThreadPoolExecutor
 
-TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'  # Замените на ваш токен
-OWNER_ID = 123456789  # Замените на ваш Telegram ID
+TOKEN = 'YOUR_BOT_TOKEN'  # Փոխարինեք ձեր բոտի նշանաբառով
+OWNER_ID = 123456789  # Փոխարինեք ձեր Telegram ID-ով
 BANNED_USERS_FILE = 'banned_users.txt'
 
 bot = telebot.TeleBot(TOKEN)
@@ -14,7 +14,7 @@ bot = telebot.TeleBot(TOKEN)
 DOWNLOAD_FOLDER = 'downloads'
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
-# Функции для работы с файлом заблокированных пользователей
+# Ֆունկցիաներ արգելված օգտատերերի հետ աշխատանքի համար
 def get_banned_users():
     if not os.path.exists(BANNED_USERS_FILE):
         return set()
@@ -32,61 +32,61 @@ def remove_banned_user(user_id):
         with open(BANNED_USERS_FILE, 'w') as file:
             file.writelines(f"{uid}\n" for uid in banned_users)
 
-# Проверка на блокировку
+# Ստուգում, թե օգտատերը արգելված է
 def is_user_banned(user_id):
     return str(user_id) in get_banned_users()
 
-# Обработчик команды /ban
+# /ban հրամանի մշակման ֆունկցիան
 @bot.message_handler(commands=['ban'])
 def ban_user(message):
-    if message.from_user.id != OWNER_ID:
-        bot.reply_to(message, "❌ У вас нет прав для выполнения этой команды.")
+    if message.from_user.id != 5743254515:
+        bot.reply_to(message, "❌ Դուք չունեք այս հրամանը կատարելու իրավունք։")
         return
 
     args = message.text.split()
     if len(args) != 2:
-        bot.reply_to(message, "⚠️ Использование: /ban {user_id или @username}")
+        bot.reply_to(message, "⚠️ Օգտագործում: /ban {օգտատիրոջ ID կամ @username}")
         return
 
     identifier = args[1]
 
-    if identifier.isdigit():  # Если это ID
+    if identifier.isdigit():  # Եթե ID է
         add_banned_user(identifier)
-        bot.reply_to(message, f"✅ Пользователь с ID {identifier} был заблокирован.")
+        bot.reply_to(message, f"✅ Օգտատերը ID {identifier} արգելափակված է։")
         try:
-            bot.send_message(int(identifier), "❌ Вы были заблокированы в боте.")
+            bot.send_message(int(identifier), "❌ Դուք արգելափակված եք բոտում։")
         except Exception as e:
-            print(f"Ошибка при отправке сообщения пользователю {identifier}: {e}")
-    elif identifier.startswith('@'):  # Если это username
-        bot.reply_to(message, "⚠️ Блокировка по username временно недоступна.")
+            print(f"Սխալ օգտատիրոջ {identifier} հաղորդագրության ուղարկման ժամանակ: {e}")
+    elif identifier.startswith('@'):  # Եթե username է
+        bot.reply_to(message, "⚠️ Username-ով արգելափակումը ժամանակավորապես անհասանելի է։")
     else:
-        bot.reply_to(message, "❌ Неверный формат. Используйте ID или @username.")
+        bot.reply_to(message, "❌ Սխալ ֆորմատ։ Օգտագործեք ID կամ @username։")
 
-# Обработчик команды /unban
+# /unban հրամանի մշակման ֆունկցիան
 @bot.message_handler(commands=['unban'])
 def unban_user(message):
     if message.from_user.id != OWNER_ID:
-        bot.reply_to(message, "❌ У вас нет прав для выполнения этой команды.")
+        bot.reply_to(message, "❌ Դուք չունեք այս հրամանը կատարելու իրավունք։")
         return
 
     args = message.text.split()
     if len(args) != 2:
-        bot.reply_to(message, "⚠️ Использование: /unban {user_id}")
+        bot.reply_to(message, "⚠️ Օգտագործում: /unban {օգտատիրոջ ID}")
         return
 
     user_id = args[1]
     if not user_id.isdigit():
-        bot.reply_to(message, "❌ Неверный ID пользователя.")
+        bot.reply_to(message, "❌ Սխալ ID։")
         return
 
     remove_banned_user(user_id)
-    bot.reply_to(message, f"✅ Пользователь с ID {user_id} был разблокирован.")
+    bot.reply_to(message, f"✅ Օգտատերը ID {user_id} ապաբլոկավորված է։")
     try:
-        bot.send_message(int(user_id), "✅ Вы были разблокированы в боте.")
+        bot.send_message(int(user_id), "✅ Դուք ապաբլոկավորված եք բոտում։")
     except Exception as e:
-        print(f"Ошибка при отправке сообщения пользователю {user_id}: {e}")
+        print(f"Սխալ օգտատիրոջ {user_id} հաղորդագրության ուղարկման ժամանակ: {e}")
 
-# Функция поиска видео
+# YouTube որոնման ֆունկցիան
 def search_youtube(query):
     ydl_opts = {'quiet': True, 'noplaylist': True, 'extract_flat': True}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -95,10 +95,10 @@ def search_youtube(query):
             if result and 'entries' in result:
                 return result['entries']
         except Exception as e:
-            print(f"Ошибка при поиске: {e}")
+            print(f"Որոնման սխալ: {e}")
     return []
 
-# Функция загрузки аудио
+# MP3 ներբեռնման ֆունկցիան
 def download_audio(url):
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -116,60 +116,60 @@ def download_audio(url):
             filename = ydl.prepare_filename(info_dict).replace('.webm', '.mp3').replace('.m4a', '.mp3')
             return filename
     except Exception as e:
-        print(f"Ошибка при скачивании: {e}")
+        print(f"Ներբեռնման սխալ: {e}")
     return None
 
-# Обработчик команды /start
+# /start հրամանի մշակման ֆունկցիան
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     if is_user_banned(message.from_user.id):
-        bot.reply_to(message, "❌ Вы заблокированы и не можете использовать бота.")
+        bot.reply_to(message, "❌ Դուք արգելափակված եք և չեք կարող օգտվել բոտից։")
         return
     welcome_text = (
-        "👋 **Бот приветствует вас!**\n\n"
-        "🎵 Я могу найти песни на YouTube и отправить их в формате MP3!\n"
-        "🔎 Отправьте мне название песни, и я начну поиск.\n\n"
-        "📌 **Пример:** `Miyagi I Got Love`\n\n"
-        "💡 Нужна помощь? Нажмите /help."
+        "👋 **Բարի գալուստ!**\n\n"
+        "🎵 Ես կարող եմ գտնել երգեր YouTube-ում և ուղարկել MP3 ֆորմատով։\n"
+        "🔎 Ուղարկիր ինձ երգի անունը, և ես կսկսեմ որոնումը։\n\n"
+        "📌 **Օրինակ:** `Miyagi I Got Love`\n\n"
+        "💡 Օգնության համար սեղմեք /help։"
     )
     bot.send_message(message.chat.id, welcome_text, parse_mode="Markdown")
 
-# Обработчик команды /help
+# /help հրամանի մշակման ֆունկցիան
 @bot.message_handler(commands=['help'])
 def send_help(message):
     if is_user_banned(message.from_user.id):
-        bot.reply_to(message, "❌ Вы заблокированы и не можете использовать бота.")
+        bot.reply_to(message, "❌ Դուք արգելափակված եք և չեք կարող օգտվել բոտից։")
         return
     help_text = (
-        "📖 **Как пользоваться ботом:**\n\n"
-        "1. Отправьте мне название песни или исполнителя.\n"
-        "2. Я покажу 5 лучших результатов с YouTube.\n"
-        "3. Выберите песню из списка.\n"
-        "4. Песня будет преобразована в MP3 и отправлена вам.\n\n"
-        "❗ **Примечание:**\n"
-        "- Процесс может занять несколько минут в зависимости от скорости интернета.\n"
-        "- Если что-то не работает, попробуйте снова.\n\n"
-        "📩 **Вопросы:** @ldftcer"
+        "📖 **Ինչպես օգտվել բոտից:**\n\n"
+        "1. Ուղարկեք ինձ երգի կամ արտիստի անունը։\n"
+        "2. Ես ցույց կտամ YouTube-ի 5 լավագույն արդյունքները։\n"
+        "3. Ընտրեք երգը ցանկից։\n"
+        "4. Երգը կվերափոխվի MP3 ձևաչափի և կուղարկվի ձեզ։\n\n"
+        "❗ **Նշում:**\n"
+        "- Ամբողջ պրոցեսը կարող է տևել մի քանի րոպե, կախված ինտերնետի արագությունից։\n"
+        "- Եթե ինչ-որ բան չի աշխատում, փորձեք կրկին։\n\n"
+        "📩 **Հարցերի դեպքում դիմեք:** @ldftcer"
     )
     bot.send_message(message.chat.id, help_text, parse_mode="Markdown")
 
-# Обработчик сообщений
+# Տեքստային հարցման մշակման ֆունկցիան
 @bot.message_handler(func=lambda message: True)
 def handle_query(message):
     if is_user_banned(message.from_user.id):
-        bot.reply_to(message, "❌ Вы заблокированы и не можете использовать бота.")
+        bot.reply_to(message, "❌ Դուք արգելափակված եք և չեք կարող օգտվել բոտից։")
         return
 
     query = message.text
     bot.send_message(
         message.chat.id,
-        f"🔍 **Поиск:** `{query}`\n\n⏳ Пожалуйста, подождите...",
+        f"🔍 **Որոնում:** `{query}`\n\n⏳ Խնդրում եմ սպասել մի փոքր...",
         parse_mode="Markdown"
     )
     results = search_youtube(query)
     
     if not results:
-        bot.send_message(message.chat.id, "😔 Песня не найдена. Попробуйте другое название.")
+        bot.send_message(message.chat.id, "😔 Երգը չգտնվեց։ Փորձեք այլ անուն։")
         return
 
     markup = types.InlineKeyboardMarkup()
@@ -181,38 +181,38 @@ def handle_query(message):
             button = types.InlineKeyboardButton(text=button_text, callback_data=video_url)
             markup.add(button)
 
-    bot.send_message(message.chat.id, "💡 Выберите песню из списка 👇", reply_markup=markup)
+    bot.send_message(message.chat.id, "💡 Ընտրեք երգը ստորև 👇", reply_markup=markup)
 
-# Обработчик нажатия на кнопку
+# Կոճակի սեղմման մշակման ֆունկցիան
 @bot.callback_query_handler(func=lambda call: True)
 def handle_callback(call):
     if is_user_banned(call.from_user.id):
-        bot.answer_callback_query(call.id, "❌ Вы заблокированы.")
+        bot.answer_callback_query(call.id, "❌ Դուք արգելափակված եք։")
         return
 
-    bot.answer_callback_query(call.id, "⏳ Скачиваю... подождите...")
+    bot.answer_callback_query(call.id, "⏳ Ներբեռնում եմ... խնդրում եմ սպասել...")
     
     def download_and_send():
         audio_file = download_audio(call.data)
         if audio_file:
-            bot.send_message(call.message.chat.id, "✅ **Песня готова! Отправляю...**", parse_mode="Markdown")
+            bot.send_message(call.message.chat.id, "✅ **Երգը պատրաստ է! Ուղարկում եմ...**", parse_mode="Markdown")
             try:
                 with open(audio_file, 'rb') as audio:
-                    caption = "🎵 Загружено @melodyi_bot"
+                    caption = "🎵 Ներբեռնվել է @melodyi_bot"
                     bot.send_audio(call.message.chat.id, audio, title=os.path.basename(audio_file), caption=caption)
             except Exception as e:
-                bot.send_message(call.message.chat.id, "❌ Не удалось отправить песню.")
-                print(f"Ошибка при отправке файла: {e}")
+                bot.send_message(call.message.chat.id, "❌ Չհաջողվեց ուղարկել երգը։")
+                print(f"Սխալ ֆայլի ուղարկման ժամանակ: {e}")
             finally:
                 os.remove(audio_file)
         else:
-            bot.send_message(call.message.chat.id, "❌ Не удалось загрузить песню.")
+            bot.send_message(call.message.chat.id, "❌ Չհաջողվեց ներբեռնել երգը։")
 
     with ThreadPoolExecutor(max_workers=5) as executor:
         executor.submit(download_and_send)
 
 print("\n" + "="*40)
-print("🎶 Бот успешно запущен! Ожидаю сообщений...")
+print("🎶 Բոտը հաջողությամբ գործարկված է! Սպասում եմ հաղորդագրություններին...")
 print("="*40 + "\n")
 
 bot.polling(none_stop=True)

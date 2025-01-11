@@ -6,7 +6,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 
 TOKEN = '7939631781:AAGBR38TykN2YyIh8dh2qQSRM11FtXGqTVY'  # Փոխարինեք ձեր բոտի նշանաբառով
-OWNER_ID = 123456789  # Փոխարինեք ձեր Telegram ID-ով
+OWNER_ID = 5743254515  # Փոխարինեք ձեր Telegram ID-ով
 BANNED_USERS_FILE = 'banned_users.txt'
 
 bot = telebot.TeleBot(TOKEN)
@@ -39,7 +39,7 @@ def is_user_banned(user_id):
 # /ban հրամանի մշակման ֆունկցիան
 @bot.message_handler(commands=['ban'])
 def ban_user(message):
-    if message.from_user.id != 5743254515:
+    if message.from_user.id != OWNER_ID:
         bot.reply_to(message, "❌ Դուք չունեք այս հրամանը կատարելու իրավունք։")
         return
 

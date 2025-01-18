@@ -1,14 +1,15 @@
 FROM python:3.9-slim
-yt-dlp -U
+
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-
-RUN ls -l
+RUN pip install --no-cache-dir --upgrade yt-dlp
 
 WORKDIR /app
+
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
